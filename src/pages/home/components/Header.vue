@@ -20,10 +20,11 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+@import '~styles/variables.styl'
   .header
     display: flex
     line-height: .86rem
-    background: #00bcd4
+    background: $bgColor
     color: #fff
     .header-left
       width: .64rem

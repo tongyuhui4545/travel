@@ -5,7 +5,7 @@
         <div class="title border-topbottom">当前城市</div>
         <div class="button-list">
           <div class="button-wrapper">
-            <div class="button">北京</div>
+            <div class="button">{{ this.currentCity }}</div>
           </div>
         </div>
       </div>
@@ -13,14 +13,15 @@
         <div class="title border-topbottom">热门城市</div>
         <div class="button-list">
           <div class="button-wrapper" v-for="item of hot" :key="item.id">
-            <div class="button">{{ item.name }}</div>
+            <div class="button" @click="handleCityChange(item.name)">{{ item.name }}</div>
           </div>
         </div>
       </div>
-      <div class="area" v-for="(item, key) in cities" :key="key">
+      <div class="area" v-for="(item, key) in cities" :key="key" :ref="key">
         <div class="title border-topbottom">{{ key }}</div>
         <div class="item-list">
-          <div class="item border-bottom" v-for="innerItem of item" :key="innerItem.id">
+          <div class="item border-bottom" v-for="innerItem of item" :key="innerItem.id"
+            @click="handleCityChange(innerItem.name)">
             {{ innerItem.name }}
           </div>
         </div>
@@ -31,14 +32,39 @@
 
 <script>
 import Bscroll from 'better-scroll'
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'CityList',
+  computed: {
+    ...mapState({
+      currentCity: 'city'
+    })
+  },
   props: {
     hot: Array,
-    cities: Object
+    cities: Object,
+    letter: String
+  },
+  methods: {
+    handleCityChange (city) {
+      this.changeCity(city)
+      this.$router.push('/')
+    },
+    ...mapMutations(['changeCity'])
   },
   mounted () {
-    this.scroll = new Bscroll(this.$refs.wrapper)
+    this.$nextTick(() => {
+      let bscrollDom = this.$refs.wrapper
+      this.scroll = new Bscroll(bscrollDom, { mouseWheel: true, click: true, tap: true })
+    })
+  },
+  watch: {
+    letter (val) {
+      if (this.letter) {
+        const element = this.$refs[this.letter][0]
+        this.scroll.scrollToElement(element)
+      }
+    }
   }
 }
 </script>

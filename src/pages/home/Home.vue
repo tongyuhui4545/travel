@@ -1,10 +1,10 @@
 <template>
   <div>
     <HomeHeader />
-    <HomeSwiper></HomeSwiper>
-    <HomeIcons></HomeIcons>
-    <HomeRecommend />
-    <home-weekend></home-weekend>
+    <HomeSwiper :list="swiperList"></HomeSwiper>
+    <HomeIcons :list="iconList"></HomeIcons>
+    <HomeRecommend :list="recommendList" />
+    <home-weekend :list="weekendList"></home-weekend>
   </div>
 </template>
 
@@ -14,6 +14,7 @@ import HomeSwiper from './components/Swiper.vue'
 import HomeIcons from './components/Icons.vue'
 import HomeRecommend from './components/Recommend.vue'
 import HomeWeekend from './components/Weekend.vue'
+import { mapState } from 'vuex'
 import axios from 'axios'
 
 export default {
@@ -25,13 +26,30 @@ export default {
     HomeRecommend,
     HomeWeekend
   },
+  computed: {
+    ...mapState(['city'])
+  },
+  data () {
+    return {
+      swiperList: [],
+      iconList: [],
+      recommendList: [],
+      weekendList: []
+    }
+  },
   methods: {
     getHomeInfo () {
       axios.get('/api/index.json')
         .then(this.getHomeInfoSucc)
     },
     getHomeInfoSucc (res) {
-      console.log(res)
+      if (res.ret && res.data) {
+        const data = res.data
+        this.swiperList = data.swiperList
+        this.iconList = data.iconList
+        this.recommendList = data.recommendList
+        this.weekendList = data.weekendList
+      }
     }
   },
   mounted () {

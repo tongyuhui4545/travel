@@ -7,16 +7,22 @@
       <span class="iconfont">&#xe632;</span>
       输入城市
     </div>
-    <div class="header-right arror-icon">
-      城市
-      <span class="iconfont">&#xe688;</span>
-    </div>
+    <router-link to='/city'>
+      <div class="header-right arror-icon">
+        {{ this.city }}
+        <span class="iconfont">&#xe688;</span>
+      </div>
+    </router-link>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
-  name: 'HomeHeader'
+  name: 'HomeHeader',
+  computed: {
+    ...mapState(['city'])
+  }
 }
 </script>
 <style lang="stylus" scoped>
@@ -43,7 +49,8 @@ export default {
       color: #ccc
       border-radius: .1rem
     .header-right
-      width: 1.24rem
+      min-width: 1.04rem
+      padding: 0 .1rem
       float: right
       text-align: center
       .arrow-icon
